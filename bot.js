@@ -64,7 +64,7 @@ function play(connection, msg) {
   
 var servers = {};
 
-robot.login("NDQxOTM0NzM2OTU3NjM2NjE5.Dc3fUw.2jnaE9Y4AhzYdqxW_g1DQTXElow");
+robot.login(process.env.BOT_TOKEN);
 
 robot.on('ready', () => {
 
