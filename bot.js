@@ -846,6 +846,7 @@ let embed = new Discord.RichEmbed().setAuthor("Вот тебе маи коман
 .addField("!скажи text", "Повторит за вами текст")
 .addField("!сервер", "Покажет информацию о данном сервере")
 //.addField("!музыка", "Все команды для воспроизведения музыки")
+.setFooter("Контакты разработчика: patriot777#4338")
 .setThumbnail("https://cdn.discordapp.com/avatars/441934736957636619/fce94b2b931af895d1fe09ea13997037.png?size=512")
 .setColor("#ffff00");
 
