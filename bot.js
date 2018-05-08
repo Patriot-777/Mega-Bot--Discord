@@ -587,7 +587,7 @@ if (sms == `${prefix}игры`) {
 
         msg.reply(':white_check_mark:Вы использовали бонус! Вам начислено: 1000 биткоинов');
        } else {
-        msg.reply(`:name_badge: Вы уже использовали в этом часе бонус! До разблокировки бонуса осталось: ${moment().endOf('day').fromNow()}`);
+        msg.reply(`:name_badge: Вы уже использовали сегодня бонус! До разблокировки бонуса осталось: ${moment().endOf('day').fromNow()}`);
        }
 
        fs.writeFile('jsons/binaryGame.json', JSON.stringify(binaryGame), (err) => {
