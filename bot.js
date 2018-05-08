@@ -989,136 +989,136 @@ if (sms.startsWith(`${prefix}ttest`)) {
 //                                                             //
 /////////////////////////////////////////////////////////////////
 
-// !музыка
+// // !музыка
 
-if (sms.startsWith(`${prefix}музыка`)) {
+// if (sms.startsWith(`${prefix}музыка`)) {
 
-  const m4 = await msg.channel.send("Погодь..");
+//   const m4 = await msg.channel.send("Погодь..");
 
- let embed4 = new Discord.RichEmbed().setAuthor("Ответец")
- .setDescription(":musical_score: Все музыкальные команды туть: ")
- .addField("!плей [ссылка]", "Запуск денсинга")
- .addField("!пауза", "Ну как бе и так ясно шо эт пауза")
- .addField("!дальше", "Продолжение музяки если вы взяли паузу")
- .addField("!пропуск", "Пропуск текущей композиции")
- .addField("!стоп", "Моя остановочка")
- //.addField("!минфа", "Информация о текущей музыке [НЕ РОБИТ]")
- .setThumbnail("http://www.vborskom.ru/razdel/music.jpg")
- .setColor("#009fff");
+//  let embed4 = new Discord.RichEmbed().setAuthor("Ответец")
+//  .setDescription(":musical_score: Все музыкальные команды туть: ")
+//  .addField("!плей [ссылка]", "Запуск денсинга")
+//  .addField("!пауза", "Ну как бе и так ясно шо эт пауза")
+//  .addField("!дальше", "Продолжение музяки если вы взяли паузу")
+//  .addField("!пропуск", "Пропуск текущей композиции")
+//  .addField("!стоп", "Моя остановочка")
+//  //.addField("!минфа", "Информация о текущей музыке [НЕ РОБИТ]")
+//  .setThumbnail("http://www.vborskom.ru/razdel/music.jpg")
+//  .setColor("#009fff");
 
-  m4.edit(embed4);
+//   m4.edit(embed4);
 
-  msg.reply("Вот тебе список команд по музяке :headphones: ");
- }
+//   msg.reply("Вот тебе список команд по музяке :headphones: ");
+//  }
 
- // !плей / музыка
+//  // !плей / музыка
 
- var musicOnline = 0;
- var pauseBool = 0;
+//  var musicOnline = 0;
+//  var pauseBool = 0;
 
- if (sms.startsWith(`${prefix}плей`)) {
+//  if (sms.startsWith(`${prefix}плей`)) {
 
- var musicTxt = msg.content.replace("!плей", "");
-     musicTxt = musicTxt.replace(/\s/g, "");
+//  var musicTxt = msg.content.replace("!плей", "");
+//      musicTxt = musicTxt.replace(/\s/g, "");
 
-    if (musicTxt == "" || musicTxt == undefined || musicTxt == null) {  return msg.reply(":name_badge: Ты ввел не правильную ссыль! А ну перепроверь."); }
+//     if (musicTxt == "" || musicTxt == undefined || musicTxt == null) {  return msg.reply(":name_badge: Ты ввел не правильную ссыль! А ну перепроверь."); }
  
-    if (!msg.member.voiceChannel) { return msg.reply(":name_badge: Зайди сначала в канал :/ Как ты меня услышишь!"); } 
+//     if (!msg.member.voiceChannel) { return msg.reply(":name_badge: Зайди сначала в канал :/ Как ты меня услышишь!"); } 
 
-    if (!servers[msg.guild.id]) { servers[msg.guild.id] = { queue:[] }; } 
+//     if (!servers[msg.guild.id]) { servers[msg.guild.id] = { queue:[] }; } 
 
-  var server = servers[msg.guild.id];
+//   var server = servers[msg.guild.id];
 
-  server.queue.push(musicTxt);
+//   server.queue.push(musicTxt);
 
-  if (!msg.guild.voiceConnection) { 
+//   if (!msg.guild.voiceConnection) { 
 
-  msg.member.voiceChannel.join().then(function(connection) {
+//   msg.member.voiceChannel.join().then(function(connection) {
 
-   play(connection, msg);
+//    play(connection, msg);
 
-   musicOnline = 1;
+//    musicOnline = 1;
 
-   msg.reply("Музыку в студию! - кричал народ, а им в ответ слышалось \''Да ладно!\''");
+//    msg.reply("Музыку в студию! - кричал народ, а им в ответ слышалось \''Да ладно!\''");
 
-  });
+//   });
 
-   } 
+//    } 
 
-  msg.reply("Приятного прослушивания музяки :sunglasses: ");
+//   msg.reply("Приятного прослушивания музяки :sunglasses: ");
 
- }
+//  }
 
- // !пауза / музыка
+//  // !пауза / музыка
 
- if (sms.startsWith(`${prefix}пауза`)) {
+//  if (sms.startsWith(`${prefix}пауза`)) {
 
-  try {
+//   try {
 
-  var server = servers[msg.guild.id];
+//   var server = servers[msg.guild.id];
 
-  if (server.dispatcher) server.dispatcher.pause();
+//   if (server.dispatcher) server.dispatcher.pause();
 
-  msg.reply("Музыка на паузе, есть время сгонять на кухню за бутербродом :point_up: ");
+//   msg.reply("Музыка на паузе, есть время сгонять на кухню за бутербродом :point_up: ");
 
-  } catch (error) {
-    msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
-  }
+//   } catch (error) {
+//     msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
+//   }
  
-  }
+//   }
 
-   // !дальше / музыка
+//    // !дальше / музыка
 
- if (sms.startsWith(`${prefix}дальше`)) {
+//  if (sms.startsWith(`${prefix}дальше`)) {
 
-  try {
+//   try {
 
-  var server = servers[msg.guild.id];
+//   var server = servers[msg.guild.id];
 
-  if (server.dispatcher) server.dispatcher.resume();
+//   if (server.dispatcher) server.dispatcher.resume();
 
-  msg.reply("Пора продолжить прослушивание музыки! Поехали!");
+//   msg.reply("Пора продолжить прослушивание музыки! Поехали!");
  
-} catch (error) {
-  msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
-}
+// } catch (error) {
+//   msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
+// }
 
-  }
+//   }
 
-// !пропуск / музыка
+// // !пропуск / музыка
 
-  if (sms.startsWith(`${prefix}пропуск`)) {
+//   if (sms.startsWith(`${prefix}пропуск`)) {
 
-    try {
+//     try {
 
-    var server = servers[msg.guild.id];
+//     var server = servers[msg.guild.id];
 
-    if (server.dispatcher) server.dispatcher.end();
+//     if (server.dispatcher) server.dispatcher.end();
 
-    msg.reply("Согласен, песня была хреновая, едем дальше! :arrow_right: ");
+//     msg.reply("Согласен, песня была хреновая, едем дальше! :arrow_right: ");
    
-  } catch (error) {
-    msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
-  }
+//   } catch (error) {
+//     msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
+//   }
 
-    }
+//     }
 
-// !стоп / музыка
+// // !стоп / музыка
 
-  if (sms.startsWith(`${prefix}стоп`)) {
+//   if (sms.startsWith(`${prefix}стоп`)) {
 
-    try {
-    var server = servers[msg.guild.id];
+//     try {
+//     var server = servers[msg.guild.id];
 
-    if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
+//     if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
 
-    msg.channel.send("Ну все! Кина не будет( Электричество выключили :frowning: \n\n Надеюсь приятно провели время :stuck_out_tongue: "); }
+//     msg.channel.send("Ну все! Кина не будет( Электричество выключили :frowning: \n\n Надеюсь приятно провели время :stuck_out_tongue: "); }
      
-    catch (error) {
-      msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
-    }
+//     catch (error) {
+//       msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
+//     }
 
-    }
+//     }
   });
 
 //.addField(".readyAt", msg.client.readyAt) .addField(".browser", msg.client.browser)
