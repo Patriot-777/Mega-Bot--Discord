@@ -584,7 +584,7 @@ msg.channel.send(`Я думаю, что именно --> ${randomPersona[randPer
 function Time() { //Powered by Yaroslav Andreev - Время + Дата
 
   date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 /* convert to UTC */ + (/* UTC+8 */ 3) * 60 * 60 * 1000);
-  msg.reply("Time: " + date);
+  //msg.reply("Time: " + date);
  // date.setUTCHours(11);
   
   var hour = date.getHours(); // Часы
