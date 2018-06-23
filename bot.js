@@ -5,64 +5,8 @@ const fs = require('fs');
 const moment = require('moment');
 const robot = new Discord.Client();
 const user = new Discord.ClientUser();
-
-var binaryGame = JSON.parse(fs.readFileSync('jsons/binaryGame.json', 'utf8'));
-var usersInventar = JSON.parse(fs.readFileSync('jsons/usersInventar.json', 'utf8'));
-
-function bGauto() {
-  if (!binaryGame[sender.id]) binaryGame[sender.id] = {
-    balance: 5
-  } 
-
-  fs.writeFile('jsons/binaryGame.json', JSON.stringify(binaryGame), (err) => {
-    if (err) console.error(err);
-  });
-}
-
-function uIauto() {
-  if (!usersInventar[sender.id]) usersInventar[sender.id] = {
-    pass: 'Отсутствует',
-    lic: 'Отсутствует',
-    blatGibdd: 'Отсутствует',
-    car: 'Отсутствует',
-    uchastok: 'Отсутствует',
-    house: 'Отсутствует',
-    heli: 'Отсутствует',
-    goldBaton: 'Отсутствует',
-    yahta: 'Отсутствует',
-    ostrov: 'Отсутствует',
-    zvezda: 'Отсутствует'
-  };
-}
-
-  function bonusauto() {
-    if (!binaryGame[sender.id].bonus) binaryGame[sender.id].bonus = 'Не получен';
-
-  fs.writeFile('jsons/binaryGame.json', JSON.stringify(binaryGame), (err) => {
-    if (err) console.error(err);
-  });
-}
-
- // начало
-
-function play(connection, msg) {
-
-  var server = servers[msg.guild.id];
-  
-  server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
-
-  server.queue.shift();
-
-  server.dispatcher.on("end", function() {
-
-   if (server.queue[0]) play(connection, msg);
-   else connection.disconnect();
-
-  });
-  
-  } // конец функции play
-  
-var servers = {};
+var date = new Date(); // Создаем дату
+  //date.setUTCHours(16);
 
 robot.login(process.env.BOT_TOKEN);
 
@@ -80,7 +24,7 @@ robot.on("guildMemberAdd", function(member) { try {
 
 var defaultChannelId = member.guild.systemChannelID;
 
-member.guild.channels.find("id", defaultChannelId).send(`${member.toString()} Добро пожаловать на сервер, ${member.guild.name}`); }
+member.guild.channels.find("id", defaultChannelId).send(`${member.toString()} Добро пожаловать на сервер: ${member.guild.name}`); }
 
 catch (error) { console.log(error); }
 
@@ -102,10 +46,27 @@ robot.on('message', async msg => {
     sender = msg.author;
     sms = msg.content;
     prefix = "!";
-
-    if (!msg.content.startsWith("!")) return;
+    sayPrefix = ".";
 
     if (msg.author.bot) return;
+
+    function KickForSpam() { var thisAuthor = msg.guild.members.find('id', msg.author.id)
+
+      if (msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR')) return;
+
+      if (sms.includes("discord.gg")) {
+
+       if (msg.guild.member(thisAuthor).kickable) {
+         if (msg.author.lastMessage.deletable) { msg.author.lastMessage.delete(1); }
+         msg.guild.member(thisAuthor).kick("Возможно реклама другого сервера в Дискорде.");
+         msg.channel.send(`:chicken: Данный (${msg.author.tag}) человек был кикнут мною по причине: Возможно реклама другого сервера в Дискорде.`);
+       }
+
+      }
+
+    } KickForSpam();
+
+
 
 /////////////////////////////////////////////////////////////////
 //                                                             //
@@ -114,6 +75,29 @@ robot.on('message', async msg => {
 //                                                             //
 //                                                             //
 /////////////////////////////////////////////////////////////////
+
+if (!msg.content.startsWith(`${prefix}`)) return;
+
+if (msg.content.startsWith(`${prefix}addtobase`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
+
+if (msg.author.id != 315174672356343808) return; 
+
+  smskaEdits = msg.content.replace(`${prefix}addtobase`, "");
+  //smskaEdits = smskaEdits.replace(/\s/g, " ");
+  smskaEdits = smskaEdits.split('_');
+  smskaEdits2 = smskaEdits[0].toLowerCase().slice(1);
+  smskaEdits2_1 = smskaEdits[1];
+ 
+  var dataBaseSplit = dataBase.toString().split("\n");
+  var getSize = dataBaseSplit.length;
+  var getSize2 = getSize;
+
+  fs.appendFile('jsons/DataBase.txt', `\n${smskaEdits2}\\${smskaEdits2_1}`, (err) => {
+    if (err) console.error(err); });
+
+    msg.reply(`В базу ответов добавлено сообщение: ${smskaEdits[0]}\n\nОтвет: ${smskaEdits[1]}\n\nВсего ответов в базе: ${dataBaseSplit.length}`);
+
+  }
 
 
  // !cmd
@@ -213,7 +197,7 @@ return msg.reply(":no_entry: Вы не являетесь администрат
 
  }
 
- // !ttests
+ // !aplay
 
 if (sms.startsWith(`${prefix}aplay`)) { 
   aplay = msg.content.replace("!aplay", "");
@@ -227,6 +211,18 @@ if (sms.startsWith(`${prefix}aplay`)) {
     msg.channel.bulkDelete(1);
     const dispatcher = connection.playFile(aplay[1]);
   }); } catch (error) {console.log(error);}
+
+ }
+
+  // !ttests
+
+if (sms.startsWith(`${prefix}000`)) { 
+
+  var shablonizatorSplit = shablonizator.toString().split("\n");
+  var shablonizatorSplit2 = shablonizatorSplit[1].split(" ");
+  var shablonizatorSplit3 = shablonizatorSplit2;
+
+  msg.channel.send(`${shablonizatorSplit3[0]}`);
 
  }
 
@@ -327,497 +323,7 @@ return msg.reply(":no_entry: Вы не являетесь администрат
        
   } catch (error) { msg.reply(error); } } //":name_badge: Error!"
 
-/////////////////////////////////////////////////////////////////
-//                                                             //
-//                                                             //
-//                     games   COMMANDS                        //
-//                                                             //
-//                                                             //
-///////////////////////////////////////////////////////////////// 
 
-// !игры 
-
-if (sms == `${prefix}игры`) {
-
-  const binaryStartTable = await msg.channel.send("Loading..");
-
- let binaryTable = new Discord.RichEmbed().setAuthor("Игры Mega Bot'a")
- .setDescription(":video_game: Список игр:")
- .addField("!игры бин", "Бин Опцион", true)
- .addField("!игры кнб", "Камень, ножницы, бумага", true)
- .addField("!бонус", "Бонус, который можно использовать каждый час")
- .addField("!магазин", "Игровой магазин", true)
- .addField("!инвентарь", "Ваш инвентарь", true)
- .setThumbnail("https://articles-images.sftcdn.net/wp-content/uploads/sites/8/2013/10/iStock_000018521171Small-664x374.jpg")
- .setColor("#ffae00");
-
- binaryStartTable.edit(binaryTable);
-
-  msg.reply("Для перехода в магазин используй: !магазин");
- }
-
- 
-       // !магазин
-
-       if (sms == `${prefix}магазин`) {
-
-       uIauto();
-
-        const shopStartTable = await msg.channel.send("Loading..");
-      
-       let shopTable = new Discord.RichEmbed()
-       .setDescription('Список вещичек для покупки:')
-       .addField("Паспорт[1]: ", "Цена: 10 бит")
-       .addField("Права[2]: ", "Цена: 25 бит")
-       .addField("Блат в ГИБДД[3]: ", "Цена: 50 бит")
-       .addField("Машина[4]: ", "Цена: 100 бит")
-       .addField("Участок земли[5]: ", "Цена: 500 бит")
-       .addField("Дом[6]: ", "Цена: 1.000 бит")
-       .addField("Вертолет[7]: ", "Цена: 15.000 бит")
-       .addField("Золотой батон[8]: ", "Цена: 15.000 бит")
-       .addField("Яхта[9]: ", "Цена: 50.000 бит")
-       .addField("Остров[10]: ", "Цена: 100.000 бит")
-       .addField("Звезда в космосе[11]: ", "Цена: 1.000.000 бит")
-       .addField("!купить [n'предмета]", "Купить вещичку", true)
-       .addField("!продать [n'предмета]", "Продать вещичку", true)
-       .setThumbnail("https://res.cloudinary.com/fleetnation/image/private/c_fill,g_center,h_640,w_640/v1475589742/elaczf36nus8g91fwqaz.jpg")
-       .setColor("#58a811");
-      
-       shopStartTable.edit(shopTable);
-      
-        msg.reply("Для просмотра списка ваших вещей, используй: !инвентарь");
-       }
-
-       // !инвентарь
-
-       if (sms == `${prefix}инвентарь`) {
-
-        uIauto();
-
-        var inv = usersInventar[sender.id];
-
-        const binfoStartTable = await msg.channel.send("Loading..");
-      
-       let binfoTable = new Discord.RichEmbed().setAuthor(`Имущество ${msg.author.username}`)
-       .setDescription('Список ваших вещей:')
-       .addField(":notebook_with_decorative_cover: Паспорт: ", inv.pass, true)
-       .addField(":clipboard: Права: ", inv.lic, true)
-       .addField(":slot_machine: Блат ГИБДД: ", inv.blatGibdd, true)
-       .addField(":race_car: Машина: ", inv.car, true)
-       .addField(":park: Участок: ", inv.uchastok, true)
-       .addField(":house: Дом: ", inv.house, true)
-       .addField(":helicopter: Вертолет: ", inv.heli, true)
-       .addField(":crown: Золотой батон: ", inv.goldBaton, true)
-       .addField(":speedboat: Яхта: ", inv.yahta, true)
-       .addField(":island: Остров: ", inv.ostrov, true)
-       .addField(":stars: Звезда: ", inv.zvezda, true)
-       .setThumbnail(msg.author.avatarURL)
-       .setColor("#e38b27");
-      
-       binfoStartTable.edit(binfoTable);
-      
-        //msg.reply("");
-       }
-
-       // !купить [n'предмета]
-
-      if (sms.startsWith(`${prefix}купить`)) {
-
-        buyTxt = msg.content.replace("!купить", "");
-        buyTxt = buyTxt.replace(/\s/g, "");
-
-        //if (buyTxt != nu) return msg.reply(":name_badge: Ты ввел не число!");
-
-      try {
-
-        bGauto();
-        uIauto();
-
-        switch(buyTxt) {
-          case "1": 
-          if (binaryGame[sender.id].balance < 10) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].pass = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 10;
-         
-          usersInventar[sender.id].pass = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Паспорт_], поздравляю!");
-
-          break;
-
-          case "2": 
-          if (binaryGame[sender.id].balance < 25) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].lic = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 25;
-          usersInventar[sender.id].lic = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Права_], поздравляю!");
-
-          break;
-
-          case "3": 
-          if (binaryGame[sender.id].balance < 50) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].blatGibdd = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 50;
-         
-          usersInventar[sender.id].blatGibdd = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Блат в ГИБДД_], поздравляю!");
-
-          break;
-
-          case "4": 
-          if (binaryGame[sender.id].balance < 100) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].car = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 100;
-         
-          usersInventar[sender.id].car = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Машину_], поздравляю!");
-
-          break;
-
-          case "5": 
-          if (binaryGame[sender.id].balance < 500) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].uchastok = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 500;
-         
-          usersInventar[sender.id].uchastok = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Участок земли_], поздравляю!");
-
-          break;
-
-          case "6": 
-          if (binaryGame[sender.id].balance < 1000) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].house = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 1000;
-         
-          usersInventar[sender.id].house = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Дом_], поздравляю!");
-
-          break;
-
-          case "7": 
-          if (binaryGame[sender.id].balance < 15000) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].heli = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 15000;
-         
-          usersInventar[sender.id].heli = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Вертолет_], поздравляю!");
-
-          break;
-
-          case "8": 
-          if (binaryGame[sender.id].balance < 15000) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].goldBaton = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 15000;
-         
-          usersInventar[sender.id].goldBaton = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Золотой батон_], поздравляю!");
-
-          break;
-
-          case "9": 
-          if (binaryGame[sender.id].balance < 50000) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].yahta = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 50000;
-         
-          usersInventar[sender.id].yahta = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Яхту_], поздравляю!");
-
-          break;
-
-          case "10": 
-          if (binaryGame[sender.id].balance < 100000) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].ostrov = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 100000;
-         
-          usersInventar[sender.id].ostrov = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Остров_], поздравляю!");
-
-          break;
-
-          case "11": 
-          if (binaryGame[sender.id].balance < 1000000) return msg.reply(":name_badge: У тебя недостаточно биткоинов для покупки!");
-          if (usersInventar[sender.id].zvezda = 'Есть') return msg.reply(":name_badge: У тебя уже есть эта вещь. Чекни !инвентарь");
-          binaryGame[sender.id].balance = binaryGame[sender.id].balance - 1000000;
-         
-          usersInventar[sender.id].zvezda = 'Есть';
-
-          msg.reply(":white_check_mark:Ты успешно купил себе [_Звезду в космосе_], поздравляю!");
-
-          break;
-
-          default:
-          msg.reply(":name_badge: Ошибка. Список предметов и их номера можно узнать прописав: !магазин");
-          break;
-        }
-
-      } catch (error) {
-
-        msg.reply(":name_badge: Ошибка. Пример ввода: !купить 6 (то есть дом)");
-
-      }
-
-      fs.writeFile('jsons/binaryGame.json', JSON.stringify(binaryGame), (err) => {
-        if (err) console.error(err);
-      });
-
-      fs.writeFile('jsons/usersInventar.json', JSON.stringify(usersInventar), (err) => {
-        if (err) console.error(err);
-      });
-
-       }
-
-       // !бонус
-
-       if (sms == `${prefix}бонус`) {
-
-       bonusauto();
-
-       if (binaryGame[sender.id].bonus != moment().format('L')) {
-        binaryGame[sender.id].bonus = moment().format('L');
-        binaryGame[sender.id].balance += 1000;
-
-        msg.reply(':white_check_mark:Вы использовали бонус! Вам начислено: 1000 биткоинов');
-       } else {
-        msg.reply(`:name_badge: Вы уже использовали сегодня бонус! До разблокировки бонуса осталось: ${moment().endOf('day').fromNow()}`);
-       }
-
-       fs.writeFile('jsons/binaryGame.json', JSON.stringify(binaryGame), (err) => {
-        if (err) console.error(err);
-      });
-
-       }      
-
-      // !игры бин
-
-      if (sms == `${prefix}игры бин`) {
-
-        const binaryStartTable = await msg.channel.send("Loading..");
-      
-       let binaryTable = new Discord.RichEmbed().setAuthor("Бинарный опцион")
-       .setDescription(":bar_chart: Суть в том, что вы делаете ставку + (вверх), или - (вниз) на свою сумму. Если вы выигрываете - получаете х2, если проигрываете - теряете поставленную суму с баланса в банке.")
-       .addField("!банк", "Проверка баланса", true)
-       .addField("!бин [+/-] сумма", "Сделать ставку", true)
-       .setThumbnail("http://binarnie-opciony.ru/wp-content/uploads/2017/01/binarnye-opciony.jpg")
-       .setColor("#ffae00");
-      
-       binaryStartTable.edit(binaryTable);
-      
-        msg.reply("Играй на свой страх и риск, тут жоский рандом)");
-       }
-
-       // !бин +/- сумма
-
-      if (sms.startsWith(`${prefix}бин`)) {
-
-        binTxt = msg.content.replace("!бин", "");
-        binTxt = binTxt.replace(/\s/g, " ");
-        binTxt = binTxt.split(' ', 3);
-
-        if(binTxt[1] != "-" && binTxt[1] != "+") return msg.reply(":name_badge: Ошибка. Пример ввода: !бин + 1");
-
-        if(binTxt[2] == undefined || binTxt[2] == "") return msg.reply(":name_badge: Ошибка. Пример ввода: !бин - 2");
-
-        if (isNaN(binTxt[2])) return msg.reply(":name_badge: Ты ввел не число!");
-        
-        try {
-
-          bGauto();
-
-          var jsonBalance = binaryGame[sender.id].balance;
-
-          if (jsonBalance <= 0) {
-            binaryGame[sender.id] = {
-              balance: 3
-            };
-
-            return msg.reply("У тебя в банке было меньше 1го битка, и ты не мог играть.. По этому я дарю тебе 3 своих биткоина! :upside_down: Пробуй сыграть еще раз.");
-          }
-
-          var vBalance = parseInt(binTxt[2]);
-
-          if (vBalance > jsonBalance) {
-            return msg.reply("У тебя недостаточно денег на счету в банке :frowning:\n\n Проверка баланса: !банк");
-          }
-
-          var randNum = Math.round(Math.random() * (10 - 1) + 1);
-
-          var procent = Math.round(Math.random() * (100 - 1) + 1);
-
-          if (binTxt[1] == "-") {
-            
-            if (randNum <= 5) {
-              var testNum = vBalance * 2;
-              var testNum2 = jsonBalance + testNum;
-              binaryGame[sender.id] = {
-                balance: testNum2
-              }
-
-              msg.reply(`Поздравляем! :chart_with_downwards_trend: Курс акции упал на ${procent}%\n\nТы получаешь: ${testNum} биткоинов!`);
-            } else {
-              var testNum = jsonBalance - vBalance;
-              binaryGame[sender.id] = {
-                balance: testNum
-              }
-
-              msg.reply(` :chart_with_upwards_trend: Курс акции вырос на ${procent}%\n\nТы проиграл: ${vBalance} биткоинов.`);
-            }
-
-          } if (binTxt[1] == "+") {
-            
-            if (randNum <= 5) {
-              var testNum = vBalance * 2;
-              var testNum2 = jsonBalance + testNum;
-              binaryGame[sender.id] = {
-                balance: testNum2
-              }
-
-              msg.reply(`Поздравляем! :chart_with_upwards_trend: Курс акции вырос на ${procent}%\n\nТы получаешь: ${testNum} биткоинов!`);
-            } else {
-              var testNum = jsonBalance - vBalance;
-              binaryGame[sender.id] = {
-                balance: testNum
-              }
-
-              msg.reply(` :chart_with_downwards_trend: Курс акции упал на ${procent}%\n\nТы проиграл: ${vBalance} биткоинов.`);
-            }
-
-          }
-        
-          fs.writeFile('jsons/binaryGame.json', JSON.stringify(binaryGame), (err) => {
-            if (err) console.error(err);
-          });
-
-        } catch (error) {
-          msg.reply(":name_badge: Ошибка. Пример ввода: !бин + 100");
-        }
-
-       }
-
-
-      // !банк
-
-if (sms == `${prefix}банк`) {
-
-  bGauto();
-
-  var bbalance = binaryGame[sender.id].balance;
-
-  const m4 = await msg.channel.send("Loading..");
-
- let embed4 = new Discord.RichEmbed()
- .setDescription(":credit_card: Ваш баланс в банке:")
- .addField("Номер карты", msg.author.discriminator, true)
- .addField("Баланс", `${bbalance} биткоинов`, true)
- .setThumbnail(msg.author.avatarURL)
- .setColor("#ffae00");
-
-  m4.edit(embed4);
-
-  msg.reply("Вот такой у тебя баланс в банке :moneybag: ");
- }
-
-  // !игры кнб
-
- if (sms == `${prefix}игры кнб`) {
-
-  const knbHelpStartTable = await msg.channel.send("Loading..");
-
- let knbHelpTable = new Discord.RichEmbed().setAuthor("Камень, ножницы, бумага")
- .setDescription(":bar_chart: Все просто. Ну, объяснять думаю не нужно.")
- .addField("!камень", "Бросаете камень")
- .addField("!ножницы", "Бросаете ножницы")
- .addField("!бумага", "Бросаете бумагу")
- .setThumbnail("http://www.krasfun.ru/images/2014/12/13065_22533573_original.jpg")
- .setColor("#004d44");
-
- knbHelpStartTable.edit(knbHelpTable);
-
-  msg.reply("Играй на свой страх и риск, тут жоский рандом)");
- }
-
-  // !камень
-
-  if (sms == `${prefix}камень`) {
-
-    var randomKnb = Math.round(Math.random() * (4 - 1) + 1);
-
-    switch(randomKnb) {
-      case 1:
-      case 2:
-      msg.reply("Я тоже бросил камень :D\n\n Бросай дальше!");
-      break;
-      case 3:
-      binaryGame[sender.id].balance = binaryGame[sender.id].balance + 10;
-      msg.reply("Я кинул ножницы :(\n\nТы победил, и я дарю тебе в качестве приза 10 биткоинов.");
-      break;
-      case 4:
-      msg.reply("Я кинул бумагу :)\n\nТы проиграл!");
-      break;
-    }
-  
-    fs.writeFile('jsons/binaryGame.json', JSON.stringify(binaryGame), (err) => {
-      if (err) console.error(err);
-    });
-   }
-
-     // !ножницы
-
-  if (sms == `${prefix}ножницы`) {
-
-    var randomKnb = Math.round(Math.random() * (4 - 1) + 1);
-
-    switch(randomKnb) {
-      case 1:
-      case 2:
-      msg.reply("Я тоже бросил ножницы :D\n\n Бросай дальше!");
-      break;
-      case 3:
-      binaryGame[sender.id].balance = binaryGame[sender.id].balance + 10;
-      msg.reply("Блин, я кинул бумагу :(\n\nТы победил, и я дарю тебе в качестве приза 10 биткоинов.");
-      break;
-      case 4:
-      msg.reply("Я кинул камень :)\n\nТы проиграл!");
-      break;
-    }
-  
-    fs.writeFile('jsons/binaryGame.json', JSON.stringify(binaryGame), (err) => {
-      if (err) console.error(err);
-    });
-   }
-
-        // !бумага
-
-  if (sms == `${prefix}бумага`) {
-
-    var randomKnb = Math.round(Math.random() * (4 - 1) + 1);
-
-    switch(randomKnb) {
-      case 1:
-      case 2:
-      msg.reply("Я тоже бросил бумагу :D\n\n Бросай дальше!");
-      break;
-      case 3:
-      binaryGame[sender.id].balance = binaryGame[sender.id].balance + 10;
-      msg.reply("Блин, я кинул камень :(\n\nТы победил, и я дарю тебе в качестве приза 10 биткоинов.");
-      break;
-      case 4:
-      msg.reply("Я кинул ножницы :)\n\nТы проиграл!");
-      break;
-    }
-  
-    fs.writeFile('jsons/binaryGame.json', JSON.stringify(binaryGame), (err) => {
-      if (err) console.error(err);
-    });
-   }
 
 /////////////////////////////////////////////////////////////////
 //                                                             //
@@ -837,11 +343,12 @@ let embed = new Discord.RichEmbed().setAuthor("Вот тебе маи коман
 .setDescription("Команды MegaБот'а")
 .addField("!команды", "Список всех команд")
 .addField("!cmd", "Список всех команд ! ДЛЯ АДМИНИСТРАТОРОВ !")
-.addField("!тест", "Проверка на активность")
 .addField("!ава", "Скинет вашу аву")
 .addField("!аноним айди сообщение", "Система отправки анонимных сообщений через Бота (Айди узнавать по ПКМ на пользователя => Копировать ID)")
 .addField("!инфа", "Скинет инфу про ваш Дискордный Аккаунт")
-.addField("!сколько text", "По считает кол-во символов в вашем тексте [БЕЗ ПРОБЕЛОВ]")
+.addField("!когда text", "Попробует угадать когда случится событие")
+.addField("!время", "Покажет точное время по МСК + День/Месяц/Год")
+.addField("!или Водка или Пиво", "Поможет с выбором")
 .addField("!рандом число1 число2", "Сгенирирует рандомное число в вашем диапазоне")
 .addField("!скажи text", "Повторит за вами текст")
 .addField("!сервер", "Покажет информацию о данном сервере")
@@ -903,6 +410,10 @@ m.edit(embed);
       if (sms.startsWith(`${prefix}скажи`)) {
         str2 = sms.replace("!скажи", "");
 
+        msg.channel.bulkDelete(1);
+
+        if (error) console.log(error);
+
         msg.channel.send(str2);
       }
 
@@ -919,10 +430,20 @@ m.edit(embed);
 
       num = Math.random() * (maxN - minN) + minN;
 
+      if (isNaN(num)) return msg.reply("Введите правильно команду! Пример: !рандом 1 100");
+
         msg.reply("Тебе короч выпало вот такое число: " + Math.round(num));
       }
   
 // !сервер
+
+function FindAllRols() {
+  var rolesList = [];
+  for(var i = 0; i <= msg.guild.roles.size; i++) {
+    rolesList += msg.guild.roles.findAll("calculatedPosition", i) + " ";
+  }
+  return `${rolesList}`;
+}
 
        if (sms == `${prefix}сервер`) {
 
@@ -937,9 +458,9 @@ m.edit(embed);
      .addField("ID создателя сервера: ", msg.guild.ownerID)
      .addField("АФК канал: ", msg.guild.afkChannel)
      .addField("Макс. вермя АФК: ", `${msg.guild.afkTimeout / 60} минут.`)
+     .addField("Количество людей на сервере: ", msg.guild.memberCount)
      .addField("Роль по умолчанию: ", msg.guild.defaultRole)
-     .addField("Тег Бота: ", msg.guild.me)
-     .addField("Когда бот присоединился: ", msg.guild.joinedAt)
+     .addField("Список ролей сервера: ", "Всего ролей: " + msg.guild.roles.size +" \n"+"Роли: "+FindAllRols())
      .setThumbnail("http://globalcs.ru/uploads/posts/2015-09/1442814842_12705367.png")
      .setColor("#000000");
 
@@ -978,149 +499,135 @@ m.edit(embed);
 if (sms.startsWith(`${prefix}ttest`)) {
   //str2 = sms.replace("!скажи", "");
 
-  msg.channel.send(msg.guild.systemChannelID);
+ // msg.channel.send(msg.guild.roles.findAll("calculatedPosition", i));
 }
 
+// !когда
 
-/////////////////////////////////////////////////////////////////
-//                                                             //
-//                                                             //
-//                     MUSIC   COMMANDS                        //
-//                                                             //
-//                                                             //
-/////////////////////////////////////////////////////////////////
+if (sms.startsWith(`${prefix}когда`)) {
+  whenRandMsg = msg.content.replace("!когда", "");
+  whenRandMsg = whenRandMsg.replace(/\s/g, " ");
 
-// // !музыка
+  var mindays = 1, maxdays = 300;
+  var minnedils = 1, maxnedils = 4;
+  var minmonth = 1, maxmonth = 12;
+  var minyears = 1, maxyears = 999;
 
-// if (sms.startsWith(`${prefix}музыка`)) {
+  var randOtvetKogda = Math.round(Math.random() * (5 - 1) + 1);
 
-//   const m4 = await msg.channel.send("Погодь..");
+  switch (randOtvetKogda) {
 
-//  let embed4 = new Discord.RichEmbed().setAuthor("Ответец")
-//  .setDescription(":musical_score: Все музыкальные команды туть: ")
-//  .addField("!плей [ссылка]", "Запуск денсинга")
-//  .addField("!пауза", "Ну как бе и так ясно шо эт пауза")
-//  .addField("!дальше", "Продолжение музяки если вы взяли паузу")
-//  .addField("!пропуск", "Пропуск текущей композиции")
-//  .addField("!стоп", "Моя остановочка")
-//  //.addField("!минфа", "Информация о текущей музыке [НЕ РОБИТ]")
-//  .setThumbnail("http://www.vborskom.ru/razdel/music.jpg")
-//  .setColor("#009fff");
+  case 1: var randDays = Math.round(Math.random() * (maxdays - mindays) + mindays);
+  msg.reply(`думаю это случится через ${randDays} дней.`);
+  break;
+  case 2: var randNedils = Math.round(Math.random() * (maxnedils - minnedils) + minnedils);
+  msg.reply(`наверное это произойдет через ${randNedils} недели.`);
+  break;
+  case 3: var randMonth = Math.round(Math.random() * (maxmonth - minmonth) + minmonth);
+  msg.reply(`я не экстрасенс, но наверное это будет через ${randMonth} месяца.`);
+  break;
+  case 4: var randYears = Math.round(Math.random() * (maxyears - minyears) + minyears);
+  msg.reply(`ждать тебе еще долго.. Целых ${randYears} года.`);
+  break;
+  case 5:
+  msg.reply("Наверное этого не случится никогда..");
+  break;
 
-//   m4.edit(embed4);
+  }
 
-//   msg.reply("Вот тебе список команд по музяке :headphones: ");
-//  }
+}
 
-//  // !плей / музыка
+// !или
 
-//  var musicOnline = 0;
-//  var pauseBool = 0;
+if (sms.startsWith(`${prefix}или`)) {
+  ili = msg.content.replace("!или", "");
+  ili = ili.replace(/\s/g, " ");
+  ili = ili.split(" ");
 
-//  if (sms.startsWith(`${prefix}плей`)) {
+if (ili[2] != "или") return msg.reply("Ошибка. Пример команды: !или Собака или Кот");
 
-//  var musicTxt = msg.content.replace("!плей", "");
-//      musicTxt = musicTxt.replace(/\s/g, "");
 
-//     if (musicTxt == "" || musicTxt == undefined || musicTxt == null) {  return msg.reply(":name_badge: Ты ввел не правильную ссыль! А ну перепроверь."); }
- 
-//     if (!msg.member.voiceChannel) { return msg.reply(":name_badge: Зайди сначала в канал :/ Как ты меня услышишь!"); } 
+var rand = Math.round(Math.random() * (3 - 1) + 1);
 
-//     if (!servers[msg.guild.id]) { servers[msg.guild.id] = { queue:[] }; } 
+switch (rand) {
 
-//   var server = servers[msg.guild.id];
+  case 1: msg.channel.send("Думаю я бы выбрал: " + ili[1]);
+  break;
+  case 2: msg.channel.send("Думаю я бы выбрал: " + ili[3]);
+  break;
+  case 3: msg.channel.send("Думаю я бы ничего из этого не выбрал..");
+  break;
 
-//   server.queue.push(musicTxt);
+ }
 
-//   if (!msg.guild.voiceConnection) { 
+}
 
-//   msg.member.voiceChannel.join().then(function(connection) {
+// !кто
 
-//    play(connection, msg);
+if (sms.startsWith(`${prefix}кто`)) {
+  who = msg.content.replace("!кто", "");
+  who = who.replace(/\s/g, " ").toString();
+  who = who.replace("?", "");
 
-//    musicOnline = 1;
+var membersList = msg.guild.members.array().length;
 
-//    msg.reply("Музыку в студию! - кричал народ, а им в ответ слышалось \''Да ладно!\''");
+var randPerson = Math.round(Math.random() * (membersList - 0) + 0);
 
-//   });
+var randomPersona = msg.guild.members.array().toString().split(",");
 
-//    } 
+msg.channel.send(`Я думаю, что именно --> ${randomPersona[randPerson]} - ${who}`);
 
-//   msg.reply("Приятного прослушивания музяки :sunglasses: ");
+}
 
-//  }
+// !время
 
-//  // !пауза / музыка
+function Time() { //Powered by Yaroslav Andreev - Время + Дата
 
-//  if (sms.startsWith(`${prefix}пауза`)) {
+  date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 /* convert to UTC */ + (/* UTC+8 */ 3) * 60 * 60 * 1000);
+  msg.reply("Time: " + date);
+ // date.setUTCHours(11);
+  
+  var hour = date.getHours(); // Часы
+  
+  if (hour < 10) hour = "0" + hour; 
+  
+  
+  var min = date.getMinutes(); // Минуты
+  
+  if (min < 10) { min = "0" + min; }
+  
+  
+  var sec = date.getSeconds(); // Секунды
+  
+  if (sec < 10) sec = "0" + sec;
+  
+  
+  var mDay = date.getDate(); // Число
+  
+  if (mDay < 10) mDay = "0" + mDay;
+  
+  
+  var month = date.getMonth(); // Месяц
+  
+  month++;
+  
+  if (month < 10) month = "0" + month;
+  
+  
+  var enterDate = "Время: " + hour +":"+ min +":"+ sec + " | Дата: " + mDay +"."+ month +"."+ date.getFullYear();
 
-//   try {
+  msg.channel.send(enterDate);
+  
+  };
 
-//   var server = servers[msg.guild.id];
+  if (sms.startsWith(`${prefix}время`)) {
+  
+  Time();
+  
+  }
 
-//   if (server.dispatcher) server.dispatcher.pause();
 
-//   msg.reply("Музыка на паузе, есть время сгонять на кухню за бутербродом :point_up: ");
-
-//   } catch (error) {
-//     msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
-//   }
- 
-//   }
-
-//    // !дальше / музыка
-
-//  if (sms.startsWith(`${prefix}дальше`)) {
-
-//   try {
-
-//   var server = servers[msg.guild.id];
-
-//   if (server.dispatcher) server.dispatcher.resume();
-
-//   msg.reply("Пора продолжить прослушивание музыки! Поехали!");
- 
-// } catch (error) {
-//   msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
-// }
-
-//   }
-
-// // !пропуск / музыка
-
-//   if (sms.startsWith(`${prefix}пропуск`)) {
-
-//     try {
-
-//     var server = servers[msg.guild.id];
-
-//     if (server.dispatcher) server.dispatcher.end();
-
-//     msg.reply("Согласен, песня была хреновая, едем дальше! :arrow_right: ");
-   
-//   } catch (error) {
-//     msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
-//   }
-
-//     }
-
-// // !стоп / музыка
-
-//   if (sms.startsWith(`${prefix}стоп`)) {
-
-//     try {
-//     var server = servers[msg.guild.id];
-
-//     if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
-
-//     msg.channel.send("Ну все! Кина не будет( Электричество выключили :frowning: \n\n Надеюсь приятно провели время :stuck_out_tongue: "); }
-     
-//     catch (error) {
-//       msg.reply(":name_badge: Шо та пошло не так. Наверное у тебя музыка не запущена :/");
-//     }
-
-//     }
-  });
+ });
 
 //.addField(".readyAt", msg.client.readyAt) .addField(".browser", msg.client.browser)
 //embed "[add link btn] (youtube.com)"
