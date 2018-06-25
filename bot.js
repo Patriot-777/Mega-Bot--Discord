@@ -10,6 +10,16 @@ var date = new Date(); // Создаем дату
 
 robot.login(process.env.BOT_TOKEN);
 
+function makeid() {
+  var text = "";
+  var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
+
 robot.on('ready', () => {
 
   console.log("Стартуем!!!");
@@ -45,6 +55,7 @@ robot.on('message', async msg => {
 
     sender = msg.author;
     sms = msg.content;
+    lm = msg.member.lastMessage.toString();
     prefix = "!";
     sayPrefix = ".";
 
@@ -65,8 +76,6 @@ robot.on('message', async msg => {
       }
 
     } KickForSpam();
-
-
 
 /////////////////////////////////////////////////////////////////
 //                                                             //
@@ -626,6 +635,155 @@ function Time() { //Powered by Yaroslav Andreev - Время + Дата
   
   }
 
+
+/////////////////////////////////////////////////////////////////
+//                                                             //
+//                                                             //
+//                     games   COMMANDS                        //
+//                                                             //
+//                                                             //
+///////////////////////////////////////////////////////////////// 
+
+// !игры 
+
+if (sms == `${prefix}игры`) {
+
+  const gamesListEdited = await msg.channel.send("Loading..");
+
+ let gamesList = new Discord.RichEmbed().setAuthor("Игры Mega Bot'a")
+ .setDescription(":video_game: Список игр:")
+ //.addField("!игры города", "Игра в угадывание городов на последнюю букву", true)
+ .addField("!игры кнб", "Камень, ножницы, бумага", true)
+ .addField("!игры стоп", "Окончание одной из игр которую вы выбрали", true)
+ .setThumbnail("https://articles-images.sftcdn.net/wp-content/uploads/sites/8/2013/10/iStock_000018521171Small-664x374.jpg")
+ .setColor("#ffae00");
+
+ gamesListEdited.edit(gamesList);
+
+ }
+
+   // !игры кнб
+
+ if (sms == `${prefix}игры кнб`) {
+
+ gameNow = "knb";
+
+  knbResultWin = 0;
+  knbResultLose = 0;
+
+  generateNameForGameRoom = `игра-камень-ножницы-бумага-${makeid()}`;
+  idNowRoom = msg.guild.systemChannelID;
+  defRole = msg.guild.defaultRole.id; //msg.guild.createChannel()
+
+  msg.guild.createChannel(generateNameForGameRoom, "text", undefined, "Создание комнаты для игры КНБ.")
+  .then( async createdChannel => {createdChannel.overwritePermissions(defRole, {'READ_MESSAGES': false})
+  createdChannel.overwritePermissions(msg.guild.members.find('id', msg.author.id), {'READ_MESSAGES': true})
+
+    const knbHelpStartTable = await createdChannel.send("Loading..");
+
+ let knbHelpTable = new Discord.RichEmbed().setAuthor("Камень, ножницы, бумага")
+ .setDescription(":bar_chart: Все просто. Ну, объяснять думаю не нужно.")
+ .addField("!камень", "Бросаете камень")
+ .addField("!ножницы", "Бросаете ножницы")
+ .addField("!бумага", "Бросаете бумагу")
+ .setThumbnail("http://www.krasfun.ru/images/2014/12/13065_22533573_original.jpg")
+ .setColor("#004d44");
+
+ knbHelpStartTable.edit(knbHelpTable);
+
+ createdChannel.send("Если захочешь закончить игру, напиши: !игры стоп");
+
+});
+
+ }
+
+ if (sms == `${prefix}knb`) { msg.reply(gameNow); }
+
+  // !камень
+
+  if (sms == `${prefix}камень`) { if (gameNow != "knb") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб");
+                                  if (msg.channel.name != generateNameForGameRoom) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее: " + msg.guild.channels.find('name', generateNameForGameRoom.toString()));
+    var randomKnb = Math.round(Math.random() * (4 - 1) + 1);
+
+    switch(randomKnb) {
+      case 1:
+      case 2:
+      msg.reply("Я тоже бросил камень :D\n\n Бросай дальше!");
+      break;
+      case 3: knbResultWin++;
+      msg.reply("Я кинул ножницы :(\n\nТы победил, жоский прямо. +1 очко\n\nПобед: " + knbResultWin + "\n\nПоражений: " + knbResultLose);
+      break;
+      case 4: knbResultLose++;
+      msg.reply("Я кинул бумагу :)\n\nТы проиграл!");
+      break;
+    }
+
+   }
+
+     // !ножницы
+
+  if (sms == `${prefix}ножницы`) { if (gameNow != "knb") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб");
+                                   if (msg.channel.name != generateNameForGameRoom) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее для начала игры.");
+    var randomKnb = Math.round(Math.random() * (4 - 1) + 1);
+
+    switch(randomKnb) {
+      case 1:
+      case 2:
+      msg.reply("Я тоже бросил ножницы :D\n\n Бросай дальше!");
+      break;
+      case 3: knbResultWin++;
+      msg.reply("Блин, я кинул бумагу :(\n\nТы победил, жоский прямо. +1 очко\n\nПобед: " + knbResultWin + "\n\nПоражений: " + knbResultLose);
+      break;
+      case 4: knbResultLose++;
+      msg.reply("Я кинул камень :)\n\nТы проиграл!");
+      break;
+    }
+  
+   }
+
+        // !бумага
+
+  if (sms == `${prefix}бумага`) { if (gameNow != "knb") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб");
+                                  if (msg.channel.name != generateNameForGameRoom) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее для начала игры.");
+
+    var randomKnb = Math.round(Math.random() * (4 - 1) + 1);
+
+    switch(randomKnb) {
+      case 1:
+      case 2:
+      msg.reply("Я тоже бросил бумагу :D\n\n Бросай дальше!");
+      break;
+      case 3: knbResultWin++;
+      msg.reply("Блин, я кинул камень :(\n\nТы победил, жоский прямо. +1 очко\n\nПобед: " + knbResultWin + "\n\nПоражений: " + knbResultLose);
+      break;
+      case 4: knbResultLose++;
+      msg.reply("Я кинул ножницы :)\n\nТы проиграл!");
+      break;
+    }
+
+   } 
+ 
+    // !игры стоп
+
+ if (sms == `${prefix}игры стоп`) {
+
+  if (gameNow == undefined || gameNow == "404") return msg.reply("Мы с тобой еще не начинали играть в игры!");
+
+  switch(gameNow) {
+    case "knb": gameResult = `Ты победил меня ровно: ${knbResultWin} раз.\n\nНо проиграл мне: аж ${knbResultLose} раз!`;
+     msg.guild.channels.find('name', generateNameForGameRoom).delete("Игра окончена.");
+    break;
+    case "city": gameResult = `Ты смог назвать: ${cityResultWin} городов.\n\nНеплохо!`;
+    break;
+  }
+
+  gameNow = "404";
+
+  msg.guild.channels.find('id', idNowRoom).createInvite(0).then(invite =>
+    msg.reply(`Вот мы и закончили с тобой играть :)\n\nРезультаты игры: ${gameResult}`)
+);;
+
+ }
 
  });
 
