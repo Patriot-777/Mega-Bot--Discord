@@ -38,7 +38,6 @@ member.guild.channels.find("id", defaultChannelId).send(`${member.toString()} Д
 
 catch (error) { console.log(error); }
 
-
 }); // guildMemberAdd
 
 robot.on('guildMemberRemove', member => { try {
@@ -59,13 +58,15 @@ robot.on('message', async msg => {
     prefix = "!";
     sayPrefix = ".";
 
+   
+
     if (msg.author.bot) return;
 
     function KickForSpam() { var thisAuthor = msg.guild.members.find('id', msg.author.id)
 
       if (msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR')) return;
 
-      if (sms.includes("discord.gg")) {
+      if (sms.toLowerCase().includes("discord.gg")) {
 
        if (msg.guild.member(thisAuthor).kickable) {
          if (msg.author.lastMessage.deletable) { msg.author.lastMessage.delete(1); }
@@ -108,10 +109,59 @@ if (msg.author.id != 315174672356343808) return;
 
   }
 
+  // !colored stop
+
+  if (sms.startsWith(`${prefix}colored stop`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id); 
+
+if (!msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR') && msg.author.id != 315174672356343808)
+
+return msg.reply(":no_entry: Вы не являетесь администратором на этом сервере! Данная команда не доступна.:no_entry: "); 
+
+stopColoredRole = 1;
+
+  }
+
+   // !colored
+
+if (sms.startsWith(`${prefix}colored`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id); 
+
+if (!msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR') && msg.author.id != 315174672356343808)
+
+return msg.reply(":no_entry: Вы не являетесь администратором на этом сервере! Данная команда не доступна.:no_entry: ");
+
+stopColoredRole = 0;
+
+coloredRole = msg.content; 
+coloredRole = coloredRole.replace("!colored ", "");
+coloredRole = coloredRole.replace(/\s/g, " ");
+
+if (coloredRole == "" || coloredRole == null || coloredRole == undefined) return msg.reply("После !colored нужно ввести название роли");
+
+if (!msg.guild.roles.find("name", coloredRole)) return msg.reply("Роль не обнаружена.");
+
+function SetIntervalForColoredRole() {
+  setTimeout(SetColorForRole1, 1500);
+}
+
+
+function SetColorForRole1() { if (stopColoredRole == 1) return;
+
+random = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+theRole = msg.guild.roles.find("name", coloredRole);
+
+if (theRole == null) return;
+theRole.edit({color: random});
+
+SetIntervalForColoredRole();
+} SetColorForRole1(); 
+
+//msg.reply("Запущено.");
+
+  }
 
  // !cmd
 
-if (sms == `${prefix}cmd`) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
+if (sms.toLowerCase() == `${prefix}cmd`) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
 
 if (!msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR') && msg.author.id != 315174672356343808)
 
@@ -135,7 +185,7 @@ m.edit(embed);
 
 // !создать канал
 
-if (sms.startsWith(`${prefix}создать канал`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
+if (sms.toLowerCase().startsWith(`${prefix}создать канал`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
 
 if (!msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR') && msg.author.id != 315174672356343808)
 
@@ -166,7 +216,7 @@ return msg.reply(":no_entry: Вы не являетесь администрат
 
 // !удалить канал
 
-if (sms.startsWith(`${prefix}удалить канал`)) {var thisAuthor = msg.guild.members.find('id', msg.author.id);
+if (sms.toLowerCase().startsWith(`${prefix}удалить канал`)) {var thisAuthor = msg.guild.members.find('id', msg.author.id);
 
 if (!msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR') && msg.author.id != 315174672356343808)
 
@@ -194,7 +244,7 @@ return msg.reply(":no_entry: Вы не являетесь администрат
 
 // !рассылка
 
-if (sms.startsWith(`${prefix}рассылка`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
+if (sms.toLowerCase().startsWith(`${prefix}рассылка`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
 
 if (!msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR') && msg.author.id != 315174672356343808)
 
@@ -208,7 +258,7 @@ return msg.reply(":no_entry: Вы не являетесь администрат
 
  // !aplay
 
-if (sms.startsWith(`${prefix}aplay`)) { 
+if (sms.toLowerCase().startsWith(`${prefix}aplay`)) { 
   aplay = msg.content.replace("!aplay", "");
   aplay = aplay.replace(/\s/g, " ");
   aplay = aplay.split(' ', 3);
@@ -223,21 +273,9 @@ if (sms.startsWith(`${prefix}aplay`)) {
 
  }
 
-  // !ttests
-
-if (sms.startsWith(`${prefix}000`)) { 
-
-  var shablonizatorSplit = shablonizator.toString().split("\n");
-  var shablonizatorSplit2 = shablonizatorSplit[1].split(" ");
-  var shablonizatorSplit3 = shablonizatorSplit2;
-
-  msg.channel.send(`${shablonizatorSplit3[0]}`);
-
- }
-
  // !ban
 
-if (sms.startsWith(`${prefix}ban`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
+if (sms.toLowerCase().startsWith(`${prefix}ban`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
 
 if (!msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR') && msg.author.id != 315174672356343808)
 
@@ -271,7 +309,7 @@ return msg.reply(":no_entry: Вы не являетесь администрат
 
 // !admin
 
-if (sms.startsWith(`${prefix}admin`)) {var thisAuthor = msg.guild.members.find('id', msg.author.id);
+if (sms.toLowerCase().startsWith(`${prefix}admin`)) {var thisAuthor = msg.guild.members.find('id', msg.author.id);
 
 if (!msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR') && msg.author.id != 315174672356343808)
 
@@ -287,7 +325,7 @@ return msg.reply(":no_entry: Вы не являетесь администрат
 
 // !очистка
 
-   if (sms.startsWith(`${prefix}очистка`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
+   if (sms.toLowerCase().startsWith(`${prefix}очистка`)) { var thisAuthor = msg.guild.members.find('id', msg.author.id);
 
    if (!msg.guild.member(thisAuthor).hasPermission('ADMINISTRATOR') && msg.author.id != 315174672356343808)
    
@@ -307,7 +345,7 @@ return msg.reply(":no_entry: Вы не являетесь администрат
 
   // !setmoney
 
-  if (sms.startsWith(`${prefix}setmoney`)) { 
+  if (sms.toLowerCase().startsWith(`${prefix}setmoney`)) { 
 
     if (msg.author.id != 315174672356343808) return;
 
@@ -344,7 +382,7 @@ return msg.reply(":no_entry: Вы не являетесь администрат
 
 // !команды
 
-if (sms == `${prefix}команды`) {
+if (sms.toLowerCase() == `${prefix}команды`) {
 
   const m = await msg.channel.send("Погодь..");
 
@@ -372,7 +410,7 @@ m.edit(embed);
   
 // !тест
 
-    if (sms == `${prefix}тест`) {
+    if (sms.toLowerCase() == `${prefix}тест`) {
 
     msg.reply("Я работаю, фсе норм!");
 
@@ -380,14 +418,14 @@ m.edit(embed);
       
 // !ава
 
-    if (sms == `${prefix}ава`) {
+    if (sms.toLowerCase() == `${prefix}ава`) {
 
         msg.reply(msg.author.avatarURL);
       }
         
 // !инфа
 
-      if (sms == `${prefix}инфа`) {
+      if (sms.toLowerCase() == `${prefix}инфа`) {
 
         const m = await msg.channel.send("Погодь..");
 
@@ -408,7 +446,7 @@ m.edit(embed);
   
 // !сколько
 
-    if (sms.startsWith(`${prefix}сколько`)) {
+    if (sms.toLowerCase().startsWith(`${prefix}сколько`)) {
         str = msg.content.replace("!сколько", "");
         str = str.replace(/\s/g, "");
                 msg.reply('Символов в твоем тексте ровно вот столько: ' + str.length);
@@ -428,7 +466,7 @@ m.edit(embed);
 
 // !рандом
 
-    if (msg.content.startsWith(`${prefix}рандом`)) {
+    if (sms.toLowerCase().startsWith(`${prefix}рандом`)) {
 
       rand = msg.content.replace("!рандом", "");
       rand = rand.replace(/\s/g, " ");
@@ -454,7 +492,7 @@ function FindAllRols() {
   return `${rolesList}`;
 }
 
-       if (sms == `${prefix}сервер`) {
+       if (sms.toLowerCase() == `${prefix}сервер`) {
 
         const m2 = await msg.channel.send("Погодь..");
 
@@ -479,7 +517,7 @@ function FindAllRols() {
 
   // !аноним
 
-  if (sms.startsWith(`${prefix}аноним`)) { try {
+  if (sms.toLowerCase().startsWith(`${prefix}аноним`)) { try {
 
      anonimStr = sms.replace("!аноним", "");
      anonimStr = anonimStr.replace(/\s/g, " ");
@@ -505,7 +543,7 @@ function FindAllRols() {
     
 // !ttest
 
-if (sms.startsWith(`${prefix}ttest`)) {
+if (sms.toLowerCase().startsWith(`${prefix}ttest`)) {
   //str2 = sms.replace("!скажи", "");
 
  // msg.channel.send(msg.guild.roles.findAll("calculatedPosition", i));
@@ -513,7 +551,7 @@ if (sms.startsWith(`${prefix}ttest`)) {
 
 // !когда
 
-if (sms.startsWith(`${prefix}когда`)) {
+if (sms.toLowerCase().startsWith(`${prefix}когда`)) {
   whenRandMsg = msg.content.replace("!когда", "");
   whenRandMsg = whenRandMsg.replace(/\s/g, " ");
 
@@ -548,7 +586,7 @@ if (sms.startsWith(`${prefix}когда`)) {
 
 // !или
 
-if (sms.startsWith(`${prefix}или`)) {
+if (sms.toLowerCase().startsWith(`${prefix}или`)) {
   ili = msg.content.replace("!или", "");
   ili = ili.replace(/\s/g, " ");
   ili = ili.split(" ");
@@ -573,7 +611,7 @@ switch (rand) {
 
 // !кто
 
-if (sms.startsWith(`${prefix}кто`)) {
+if (sms.toLowerCase().startsWith(`${prefix}кто`)) {
   who = msg.content.replace("!кто", "");
   who = who.replace(/\s/g, " ").toString();
   who = who.replace("?", "");
@@ -629,7 +667,7 @@ function Time() { //Powered by Yaroslav Andreev - Время + Дата
   
   };
 
-  if (sms.startsWith(`${prefix}время`)) {
+  if (sms.toLowerCase().startsWith(`${prefix}время`)) {
   
   Time();
   
@@ -646,7 +684,7 @@ function Time() { //Powered by Yaroslav Andreev - Время + Дата
 
 // !игры 
 
-if (sms == `${prefix}игры`) {
+if (sms.toLowerCase() == `${prefix}игры`) {
 
   const gamesListEdited = await msg.channel.send("Loading..");
 
@@ -654,7 +692,7 @@ if (sms == `${prefix}игры`) {
  .setDescription(":video_game: Список игр:")
  //.addField("!игры города", "Игра в угадывание городов на последнюю букву", true)
  .addField("!игры кнб", "Камень, ножницы, бумага", true)
- .addField("!игры стоп", "Окончание одной из игр которую вы выбрали", true)
+ //.addField("!игры кнб онлайн", "Игра против других игроков", true)
  .setThumbnail("https://articles-images.sftcdn.net/wp-content/uploads/sites/8/2013/10/iStock_000018521171Small-664x374.jpg")
  .setColor("#ffae00");
 
@@ -662,20 +700,42 @@ if (sms == `${prefix}игры`) {
 
  }
 
-   // !игры кнб
+ var gameNow = JSON.parse(fs.readFileSync('jsons/knbGame.json', 'utf8'));
 
- if (sms == `${prefix}игры кнб`) {
+ // !игры кнб
 
- gameNow = "knb";
+if (sms.toLowerCase() == `${prefix}игры кнб`) {
 
-  knbResultWin = 0;
-  knbResultLose = 0;
+  const knbHelpStartTable = await msg.channel.send("Loading..");
 
-  generateNameForGameRoom = `игра-камень-ножницы-бумага-${makeid()}`;
+ let knbHelpTable = new Discord.RichEmbed().setAuthor("Камень, ножницы, бумага")
+ .setDescription(":bar_chart: Все просто. Ну, объяснять думаю не нужно.")
+ .addField("!игры кнб бот", "Игра против бота", true)
+ .addField("!игры кнб онлайн", "Игра против других игроков", true)
+ .setThumbnail("http://www.krasfun.ru/images/2014/12/13065_22533573_original.jpg")
+ .setColor("#004d44");
+
+ knbHelpStartTable.edit(knbHelpTable);
+
+ }
+
+ gamePlayer = msg.author.id;
+
+   // !игры кнб бот
+
+ if (sms.toLowerCase() == `${prefix}игры кнб бот`) {
+
+ if (!gameNow[gamePlayer] || gameNow[gamePlayer].game == "404") gameNow[gamePlayer] = { game: "knbBot" };
+ else return msg.reply(`Мы с тобой уже играем в игру! Напиши: !игры стоп ${gameNow[gamePlayer].game}`);
+
+gameNow[gamePlayer].knbResultWin = 0;
+gameNow[gamePlayer].knbResultLose = 0;
+
+gameNow[gamePlayer].generateNameForGameRoom = `игра-камень-ножницы-бумага-бот-${makeid()}`;
   idNowRoom = msg.guild.systemChannelID;
-  defRole = msg.guild.defaultRole.id; //msg.guild.createChannel()
+  defRole = msg.guild.defaultRole.id; 
 
-  msg.guild.createChannel(generateNameForGameRoom, "text", undefined, "Создание комнаты для игры КНБ.")
+  msg.guild.createChannel(gameNow[gamePlayer].generateNameForGameRoom, "text", undefined, "Создание комнаты для игры КНБ с ботом.")
   .then( async createdChannel => {createdChannel.overwritePermissions(defRole, {'READ_MESSAGES': false})
   createdChannel.overwritePermissions(msg.guild.members.find('id', msg.author.id), {'READ_MESSAGES': true})
 
@@ -683,9 +743,9 @@ if (sms == `${prefix}игры`) {
 
  let knbHelpTable = new Discord.RichEmbed().setAuthor("Камень, ножницы, бумага")
  .setDescription(":bar_chart: Все просто. Ну, объяснять думаю не нужно.")
- .addField("!камень", "Бросаете камень")
- .addField("!ножницы", "Бросаете ножницы")
- .addField("!бумага", "Бросаете бумагу")
+ .addField("!бк || !бкамень", "Бросаете камень")
+  .addField("!бн || !бножницы", "Бросаете ножницы")
+  .addField("!бб || !ббумага", "Бросаете бумагу")
  .setThumbnail("http://www.krasfun.ru/images/2014/12/13065_22533573_original.jpg")
  .setColor("#004d44");
 
@@ -693,16 +753,16 @@ if (sms == `${prefix}игры`) {
 
  createdChannel.send("Если захочешь закончить игру, напиши: !игры стоп");
 
-});
+}); fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+       if (err) console.error(err);
+     });
 
  }
 
- if (sms == `${prefix}knb`) { msg.reply(gameNow); }
+  // !камень бот
 
-  // !камень
-
-  if (sms == `${prefix}камень`) { if (gameNow != "knb") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб");
-                                  if (msg.channel.name != generateNameForGameRoom) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее: " + msg.guild.channels.find('name', generateNameForGameRoom.toString()));
+  if (sms.toLowerCase().startsWith(`${prefix}бк`)) { if (gameNow[gamePlayer].game != "knbBot") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб бот");
+                                  if (msg.channel.name != gameNow[gamePlayer].generateNameForGameRoom) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее: " + msg.guild.channels.find('name', gameNow[gamePlayer].generateNameForGameRoom.toString()));
     var randomKnb = Math.round(Math.random() * (4 - 1) + 1);
 
     switch(randomKnb) {
@@ -710,20 +770,22 @@ if (sms == `${prefix}игры`) {
       case 2:
       msg.reply("Я тоже бросил камень :D\n\n Бросай дальше!");
       break;
-      case 3: knbResultWin++;
-      msg.reply("Я кинул ножницы :(\n\nТы победил, жоский прямо. +1 очко\n\nПобед: " + knbResultWin + "\n\nПоражений: " + knbResultLose);
+      case 3: gameNow[gamePlayer].knbResultWin++;
+      msg.reply("Я кинул ножницы :(\n\nТы победил, жоский прямо. +1 очко\n\nПобед: " + gameNow[gamePlayer].knbResultWin + "\n\nПоражений: " + gameNow[gamePlayer].knbResultLose);
       break;
-      case 4: knbResultLose++;
+      case 4: gameNow[gamePlayer].knbResultLose++;
       msg.reply("Я кинул бумагу :)\n\nТы проиграл!");
       break;
-    }
+    } fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+      if (err) console.error(err);
+    });
 
    }
 
-     // !ножницы
+     // !ножницы бот
 
-  if (sms == `${prefix}ножницы`) { if (gameNow != "knb") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб");
-                                   if (msg.channel.name != generateNameForGameRoom) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее для начала игры.");
+  if (sms.toLowerCase().startsWith(`${prefix}бн`)) { if (gameNow[gamePlayer].game != "knbBot") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб бот");
+                                   if (msg.channel.name != gameNow[gamePlayer].generateNameForGameRoom) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее для начала игры.");
     var randomKnb = Math.round(Math.random() * (4 - 1) + 1);
 
     switch(randomKnb) {
@@ -731,20 +793,22 @@ if (sms == `${prefix}игры`) {
       case 2:
       msg.reply("Я тоже бросил ножницы :D\n\n Бросай дальше!");
       break;
-      case 3: knbResultWin++;
-      msg.reply("Блин, я кинул бумагу :(\n\nТы победил, жоский прямо. +1 очко\n\nПобед: " + knbResultWin + "\n\nПоражений: " + knbResultLose);
+      case 3: gameNow[gamePlayer].knbResultWin++;
+      msg.reply("Блин, я кинул бумагу :(\n\nТы победил, жоский прямо. +1 очко\n\nПобед: " + gameNow[gamePlayer].knbResultWin + "\n\nПоражений: " + gameNow[gamePlayer].knbResultLose);
       break;
-      case 4: knbResultLose++;
+      case 4: gameNow[gamePlayer].knbResultLose++;
       msg.reply("Я кинул камень :)\n\nТы проиграл!");
       break;
-    }
+    } fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+      if (err) console.error(err);
+    });
   
    }
 
-        // !бумага
+        // !бумага бот
 
-  if (sms == `${prefix}бумага`) { if (gameNow != "knb") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб");
-                                  if (msg.channel.name != generateNameForGameRoom) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее для начала игры.");
+  if (sms.toLowerCase().startsWith(`${prefix}бб`)) { if (gameNow[gamePlayer].game != "knbBot") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб бот");
+                                  if (msg.channel.name != gameNow[gamePlayer].generateNameForGameRoom) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее для начала игры.");
 
     var randomKnb = Math.round(Math.random() * (4 - 1) + 1);
 
@@ -753,35 +817,326 @@ if (sms == `${prefix}игры`) {
       case 2:
       msg.reply("Я тоже бросил бумагу :D\n\n Бросай дальше!");
       break;
-      case 3: knbResultWin++;
-      msg.reply("Блин, я кинул камень :(\n\nТы победил, жоский прямо. +1 очко\n\nПобед: " + knbResultWin + "\n\nПоражений: " + knbResultLose);
+      case 3: gameNow[gamePlayer].knbResultWin++;
+      msg.reply("Блин, я кинул камень :(\n\nТы победил, жоский прямо. +1 очко\n\nПобед: " + gameNow[gamePlayer].knbResultWin + "\n\nПоражений: " + gameNow[gamePlayer].knbResultLose);
       break;
-      case 4: knbResultLose++;
+      case 4: gameNow[gamePlayer].knbResultLose++;
       msg.reply("Я кинул ножницы :)\n\nТы проиграл!");
       break;
-    }
+    } fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+      if (err) console.error(err);
+    });
 
    } 
+
+
+     // !игры кнб онлайн
+
+ if (sms.toLowerCase() == `${prefix}игры кнб онлайн`) { 
+
+  if (!gameNow[gamePlayer] || gameNow[gamePlayer].game == "404") { gameNow[gamePlayer] = { game: "knbOnline" };
+
+} else {
+
+   return msg.reply(`Мы с тобой уже играем в игру! Напиши: !игры стоп ${gameNow[gamePlayer].game}`);
+}
+ 
+gameNow[gamePlayer].knbResultWin = 0;
+gameNow[gamePlayer].knbResultLose = 0;
+
+gameNow[gamePlayer].gamePlayersNum = 0; //if (!gameNow[gamePlayer].gamePlayersNum || gameNow[gamePlayer].gamePlayersNum) 
+gameNow[gamePlayer].gamePlayers = []; //if (!gameNow[gamePlayer].gamePlayers || gameNow[gamePlayer].gamePlayers)
+
+gameNow[gamePlayer].gamePlayers[0] = msg.author.username;
+
+sozdatlKnbOnline = gameNow[gamePlayer].gamePlayers[0];
+ 
+gameNow[gamePlayer].generateNameForGameRoomOnline = `игра-камень-ножницы-бумага-онлайн-${makeid()}`;
+
+gameNow[gamePlayer].gnfgro = [];
+
+gameNow[gamePlayer].gnfgro += gameNow[gamePlayer].generateNameForGameRoomOnline;
+
+gameNow[gamePlayer].checkGame = 0;
+
+   idNowRoom = msg.guild.systemChannelID;
+   defRole = msg.guild.defaultRole.id; 
+ 
+   msg.guild.createChannel(gameNow[gamePlayer].generateNameForGameRoomOnline, "text", undefined, "Создание комнаты для игры КНБ.")
+   .then( async createdChannel => {createdChannel.overwritePermissions(defRole, {'READ_MESSAGES': false})
+   createdChannel.overwritePermissions(msg.guild.members.find('id', msg.author.id), {'READ_MESSAGES': true})
+
+   createdChannel.send(`Итак, ты выбрал игру КНБ с дугими игроками. Что тебе нужно сейчас сделать: \n\nПишешь !игры кнб + name\n\nВ место слова name - никнейм второго, третего участника(Если их трое, то вводить команду два раза с разными никами).\n\nБольше 3х участников добавить в игру нельзя.`);
+ 
+ }); fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+  if (err) console.error(err);
+}); 
+ 
+  }
+
+  // !игры ник
+
+  if (sms.toLowerCase() == `${prefix}игры ник`) { msg.reply(msg.guild.members.find('id', msg.author.id).displayname); }
+
+  // !игры кнб +
+
+  if (sms.toLowerCase().startsWith(`${prefix}игры кнб +`)) {  // ПЕРЕДЕЛАТЬ  === > !игры КНБ + < ==== Пишет другой чувак, которого потом добавит в игру
+
+    if (gameNow[gamePlayer].game != "knbOnline") return msg.reply(`!Для того что бы начать играть в КНБ онлайн ==> Напиши: !игры кнб онлайн`);
+
+    if (gameNow[gamePlayer].gamePlayersNum >= 3) return msg.reply('Извини, но в эту игру одновременно могут играть максимум 3 человека.\n\nВ твоей игре добавлены такие участники: ' + gameNow[gamePlayer].gamePlayers);
+
+    var newPlayerKnbOnline = sms.toLowerCase().replace("!игры кнб + ", ""); msg.reply(msg.guild.members.find("displayname", newPlayerKnbOnline).id);
+
+    //if (!msg.guild.members.find('displayname', newPlayerKnbOnline)) return msg.reply("Я не могу найти человека по такому никнейму!\n\nПопроси товарища написать: !игры ник\n\nДалее скопируй нужный никнейм, и повтори ввод команды добавления.");
+
+    gameNow[gamePlayer].gamePlayers[gameNow[gamePlayer].gamePlayersNum++] = newPlayerKnbOnline;
+
+    gameNow[msg.guild.members.find("displayname", newPlayerKnbOnline).id].generateNameForGameRoomOnline = `игра-камень-ножницы-бумага-онлайн-${makeid()}`;
+
+    gameNow[gamePlayer].gnfgro += gameNow[msg.guild.members.find('displayname', newPlayerKnbOnline).id].generateNameForGameRoomOnline;
+
+    gameNow[msg.guild.members.find('displayname', newPlayerKnbOnline).id].game = `knbOnline`;
+
+    msg.guild.createChannel(gameNow[msg.guild.members.find('displayname', newPlayerKnbOnline).id].generateNameForGameRoomOnline, "text", undefined, "Создание комнаты для игры КНБ онлайн.")
+   .then( async createdChannel => {createdChannel.overwritePermissions(defRole, {'READ_MESSAGES': false})
+   createdChannel.overwritePermissions(msg.guild.members.find('id', msg.guild.members.find('displayname', newPlayerKnbOnline).id), {'READ_MESSAGES': true})
+ 
+   printStartOnlineGameKnbMessage();
+
+   fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+    if (err) console.error(err);
+  }); 
+ });
+
+    msg.reply(`Участник (${newPlayerKnbOnline}) успешно добавлен к игре с вами.\n\n Для него создана такая же отдельная комната, куда он должен будет писать свои ходы.\n\nДобавь третего игрока, или начни гру командой: !игры кнб онлайн го`);
+
+  }
+
+  // !игры кнб онлайн го
+
+  if (sms.toLowerCase() == `${prefix}игры кнб онлайн го`) { if (gameNow[gamePlayer] != gameNow[gamePlayer])
+
+    if (gameNow[gamePlayer].game != "knbOnline") return msg.reply(`Для того что бы начать играть в КНБ онлайн ==> Напиши: !игры кнб онлайн`);
+    if (gameNow[gamePlayer].checkGame == 0) return msg.reply(`Игра уже начата.`);
+    if (gameNow[gamePlayer].gamePlayersNum < 2) return msg.reply('Для начала игры тебе нужны другие игроки. 1-2 человека. Что бы их добавить в свою игру, используй: !игры кнб + name\n\nВ место слова name - никнейм второго, третего участника(Если их трое, то вводить команду два раза с разными никами).\n\nБольше 3х участников добавить в игру нельзя.');
+
+    gameNow[msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).id].checkGame = 1;
+    gameNow[msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).id].checkGame = 1;
+    if(gameNow[sozdatlKnbOnline].gamePlayers.length > 2) gameNow[msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).id].checkGame = 1;
+
+    knbHodsNum = 0;
+
+    msg.reply("Игра запушена.");
+
+    printStartOnlineGameKnbMessage();
+
+    fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+      if (err) console.error(err);
+    }); 
+
+   }
+
+   function printStartOnlineGameKnbMessage() {
+
+    const knbHelpStartTable = createdChannel.send("Loading..");
+
+    let knbHelpTable = new Discord.RichEmbed().setAuthor("Камень, ножницы, бумага")
+    .setDescription(":bar_chart: Все просто. Ну, объяснять думаю не нужно.")
+    .addField("!ок", "Бросаете камень")
+    .addField("!он", "Бросаете ножницы")
+    .addField("!об", "Бросаете бумагу")
+    .setThumbnail("http://www.krasfun.ru/images/2014/12/13065_22533573_original.jpg")
+    .setColor("#004d44");
+   
+    knbHelpStartTable.edit(knbHelpTable);
+   
+    createdChannel.send("Если захочешь закончить игру, напиши: !игры стоп");
+  
+  } // printStartOnlineGameKnbMessage();
+
+   function knbHodResult() { knbHods = [];
+
+    knbHods[0] = gameNow[msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).id].hod;
+    knbHods[1] = gameNow[msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).id].hod;
+    if(gameNow[sozdatlKnbOnline].gamePlayers.length > 2) knbHods[2] = gameNow[msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).id].hod;
+
+    knbHodsNum = knbHods.length + 1;
+
+    if (knbHodsNum != gameNow[msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).id].gamePlayersNum) return;
+
+    fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+      if (err) console.error(err);
+    });
+
+    if(gameNow[sozdatlKnbOnline].gamePlayers.length > 2) {
+
+    if (knbHods[0] == knbHods[1] && knbHods[1] == knbHods[2]) knbOnlineResult = "Ничья.";
+    else if (knbHods[0] && knbHods[1] == "ок" && knbHods[2] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинули камень. - Победили.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул ножницы. - Проиграл.`; // Камень убил ножницы
+    else if (knbHods[0] && knbHods[2] == "ок" && knbHods[1] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули камень. - Победили.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул ножницы. - Проиграл.`; // Камень убил ножницы
+    else if (knbHods[1] && knbHods[2] == "ок" && knbHods[0] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули камень. - Победили.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул ножницы. - Проиграл.`; // Камень убил ножницы
+    else if (knbHods[0] && knbHods[2] == "ок" && knbHods[1] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули камень. - Проиграли.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул бумагу. - Победил.`; // Бумага накрыла камень
+    else if (knbHods[0] && knbHods[1] == "ок" && knbHods[2] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинули камень. - Проиграли.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинул бумагу. - Победил.`; // Бумага накрыла камень
+    else if (knbHods[1] && knbHods[2] == "ок" && knbHods[0] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули камень. - Проиграли.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул бумагу. - Победил.`; // Бумага накрыла камень
+    else if (knbHods[0] && knbHods[1] == "он" && knbHods[2] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинули ножницы. - Победили.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул бумагу. - Проиграл.`; // Ножницы порезали бумагу
+    else if (knbHods[0] && knbHods[2] == "он" && knbHods[1] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули ножницы. - Победили.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул бумагу. - Проиграл.`; // Ножницы порезали бумагу
+    else if (knbHods[1] && knbHods[2] == "он" && knbHods[0] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули ножницы. - Победили.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул бумагу. - Проиграл.`; // Ножницы порезали бумагу
+    else if (knbHods[0] && knbHods[2] == "он" && knbHods[1] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули ножницы. - Проиграли.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул камень. - Победил.`; // Камень убил ножницы
+    else if (knbHods[0] && knbHods[1] == "он" && knbHods[2] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинули ножницы. - Проиграли.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинул камень. - Победил.`; // Камень убил ножницы
+    else if (knbHods[1] && knbHods[2] == "он" && knbHods[0] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули ножницы. - Проиграли.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул камень. - Победил.`; // Камень убил ножницы
+    else if (knbHods[0] && knbHods[1] == "об" && knbHods[2] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинули бумагу. - Победили.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинул ножницы. - Проиграл.`; // Бумага накрыла камень
+    else if (knbHods[0] && knbHods[2] == "об" && knbHods[1] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули бумагу. - Победили.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул ножницы. - Проиграл.`; // Бумага накрыла камень
+    else if (knbHods[1] && knbHods[2] == "об" && knbHods[0] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули бумагу. - Победили.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул ножницы. - Проиграл.`; // Бумага накрыла камень
+    else if (knbHods[0] && knbHods[2] == "об" && knbHods[1] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули бумагу. - Проиграли.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул ножницы. - Победил.`; // Ножницы порезали бумагу 
+    else if (knbHods[0] && knbHods[1] == "об" && knbHods[2] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинули бумагу. - Проиграли.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинул ножницы. - Победил.`; // Ножницы порезали бумагу 
+    else if (knbHods[1] && knbHods[2] == "об" && knbHods[0] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} и ${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).displayname} кинули бумагу. - Проиграли.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул ножницы. - Победил.`; // Ножницы порезали бумагу 
+    else knbOnlineResult = "Каша-малаша. Кидаем снова!";
+    
+  } // Если игроков больше двух, конец
+
+  else {
+
+    if (knbHods[0] == knbHods[1]) knbOnlineResult = "Ничья.";
+    else if (knbHods[0] == "ок" && knbHods[1] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул камень. - Победил.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул ножницы. - Проиграл.`; // Камень убил ножницы
+    else if (knbHods[0] == "ок" && knbHods[1] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул камень. - Проиграл.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул бумагу. - Победил.`; // Бумага накрыла камень
+    else if (knbHods[0] == "он" && knbHods[1] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул ножницы. - Победил.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул бумагу. - Проиграл.`; // Ножницы порезали бумагу
+    else if (knbHods[0] == "он" && knbHods[1] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул ножницы. - Проиграл.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул камень. - Победил.`; // Камень убил ножницы
+    else if (knbHods[0] == "об" && knbHods[1] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул бумагу. - Победил.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул камень. - Проиграл.`; // Бумага накрыла камень
+    else if (knbHods[0] == "об" && knbHods[1] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул бумагу. - Проиграл.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул ножницы. - Победил.`; // Ножницы порезали бумагу
+    
+    else if (knbHods[1] == "ок" && knbHods[0] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул камень. - Победил.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул ножницы. - Проиграл.`; // Камень убил ножницы
+    else if (knbHods[1] == "ок" && knbHods[0] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул камень. - Проиграл.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул бумагу. - Победил.`; // Бумага накрыла камень
+    else if (knbHods[1] == "он" && knbHods[0] == "об") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул ножницы. - Победил.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул бумагу. - Проиграл.`; // Ножницы порезали бумагу
+    else if (knbHods[1] == "он" && knbHods[0] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул ножницы. - Проиграл.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул камень. - Победил.`; // Камень убил ножницы
+    else if (knbHods[1] == "об" && knbHods[0] == "ок") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул бумагу. - Победил.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул камень. - Проиграл.`; // Бумага накрыла камень
+    else if (knbHods[1] == "об" && knbHods[0] == "он") knbOnlineResult = `${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).displayname} кинул бумагу. - Проиграл.
+    \n\n${msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).displayname} кинул ножницы. - Победил.`; // Ножницы порезали бумагу
+    else knbOnlineResult = "Каша-малаша. Кидаем снова!";
+    
+  } // Если игроков два, конец
+
+    msg.guild.channels.find('displayname', msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[0]).generateNameForGameRoomOnline).createInvite({maxAge: 1000,maxUses: 1}, "Костыль. Смс в нужный рум.").then(invite =>
+      msg.reply(`Результаты игры: ${knbOnlineResult}`)
+  );;
+
+  msg.guild.channels.find('displayname', msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[1]).generateNameForGameRoomOnline).createInvite({maxAge: 1000,maxUses: 1}, "Костыль. Смс в нужный рум.").then(invite =>
+    msg.reply(`Результаты игры: ${knbOnlineResult}`)
+);;
+
+if(gameNow[sozdatlKnbOnline].gamePlayers.length > 2) {msg.guild.channels.find('displayname', msg.guild.members.find('displayname', gameNow[sozdatlKnbOnline].gamePlayers[2]).generateNameForGameRoomOnline).createInvite({maxAge: 1000,maxUses: 1}, "Костыль. Смс в нужный рум.").then(invite =>
+  msg.reply(`Результаты игры: ${knbOnlineResult}`)
+);; }
+
+   knbHodsNum = 0;
+
+   }
+ 
+   // !камень онлайн
+ 
+   if (sms.toLowerCase() == `${prefix}ок`) { if (gameNow[gamePlayer].game != "knbOnline") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб бот");
+                                   if (msg.channel.name != gameNow[gamePlayer].generateNameForGameRoomOnline) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее: " + msg.guild.channels.find('displayname', gameNow[gamePlayer].generateNameForGameRoomOnline.toString()));
+                                   if (gameNow[gamePlayer].checkGame == 0) return msg.reply("Подожди! Игра еще не началась.");
+
+    gameNow[gamePlayer].hod = sms.replace("!", "").toLowerCase();
+
+    msg.reply("Твой ход засчитан. Ожидай.");
+
+    fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+      if (err) console.error(err);
+    });
+
+     knbHodResult();
+ 
+    }
+ 
+      // !ножницы онлайн
+ 
+   if (sms.toLowerCase() == `${prefix}он`) { if (gameNow[gamePlayer].game != "knbOnline") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб бот");
+                                    if (msg.channel.name != gameNow[gamePlayer].generateNameForGameRoomOnline) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее для начала игры.");
+                                    if (gameNow[gamePlayer].checkGame == 0) return msg.reply("Подожди! Игра еще не началась.");
+
+    gameNow[gamePlayer].hod = sms.replace("!", "").toLowerCase();
+
+    msg.reply("Твой ход засчитан. Ожидай.");
+
+    fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+      if (err) console.error(err);
+    });
+
+    knbHodResult();
+   
+    }
+ 
+         // !бумага онлайн
+ 
+   if (sms.toLowerCase() == `${prefix}об`) { if (gameNow[gamePlayer].game != "knbOnline") return msg.reply("Для того что бы начать играть в эту игру, напиши: !игры кнб бот");
+                                   if (msg.channel.name != generateNameForGameRoomOnline) return msg.reply("Для вас уже создана комната с игрой! Перейдите в нее для начала игры.");
+                                   if (gameNow[gamePlayer].checkGame == 0) return msg.reply("Подожди! Игра еще не началась.");
+                    
+    gameNow[gamePlayer].hod = sms.replace("!", "").toLowerCase();
+
+    msg.reply("Твой ход засчитан. Ожидай.");
+
+    fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+      if (err) console.error(err);
+    });
+
+     knbHodResult();
+ 
+    } 
  
     // !игры стоп
 
- if (sms == `${prefix}игры стоп`) {
+ if (sms.toLowerCase().startsWith(`${prefix}игры стоп`)) {
 
-  if (gameNow == undefined || gameNow == "404") return msg.reply("Мы с тобой еще не начинали играть в игры!");
+  if (!gameNow[gamePlayer] || gameNow[gamePlayer].game == "404") return msg.reply("Мы с тобой еще не начинали играть в игры!");
 
-  switch(gameNow) {
-    case "knb": gameResult = `Ты победил меня ровно: ${knbResultWin} раз.\n\nНо проиграл мне: аж ${knbResultLose} раз!`;
-     msg.guild.channels.find('name', generateNameForGameRoom).delete("Игра окончена.");
+  switch(gameNow[gamePlayer].game) {
+    case "knbBot": gameResult = `Ты победил меня ровно: ${gameNow[gamePlayer].knbResultWin} раз.\n\nНо проиграл мне: аж ${gameNow[gamePlayer].knbResultLose} раз!`;
+     msg.guild.channels.find('name', gameNow[gamePlayer].generateNameForGameRoom).delete("Игра окончена.");
     break;
-    case "city": gameResult = `Ты смог назвать: ${cityResultWin} городов.\n\nНеплохо!`;
+    case "knbOnline": ;
+    msg.guild.channels.find('name', gameNow[gamePlayer].generateNameForGameRoomOnline).delete("Игра окончена.");
     break;
   }
 
-  gameNow = "404";
+  gameNow[gamePlayer].game = "404";
 
-  msg.guild.channels.find('id', idNowRoom).createInvite(0).then(invite =>
-    msg.reply(`Вот мы и закончили с тобой играть :)\n\nРезультаты игры: ${gameResult}`)
-);;
+  msg.guild.channels.find('id', idNowRoom).createInvite({maxAge: 1000,maxUses: 1}, "Костыль. Смс в нужный рум.").then(invite =>
+    msg.reply('Игра окончена.')
+
+);; fs.writeFile('jsons/knbGame.json', JSON.stringify(gameNow), (err) => {
+  if (err) console.error(err);
+});
 
  }
 
