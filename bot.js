@@ -26,7 +26,7 @@ robot.on('ready', () => {
 
 robot.user.setStatus('dnd');
 
-robot.user.setGame('GTA 7', 'https://twitch.tv/vk.com/megabotds');
+robot.user.setGame('vk.com/id_megabot', 'https://twitch.tv/vk.com/vk.com/id_megabot');
 
 }); // ready
 
