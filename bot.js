@@ -1,4 +1,3 @@
-
 const Discord = require('discord.js');
 const YTDL = require('ytdl-core');
 const fs = require('fs');
@@ -20,13 +19,34 @@ function makeid() {
   return text;
 }
 
+//  ------------------------------------------------------------------
+
+// robot.on('guildMemberUpdate', async (member) => {
+
+//   const entry = await member.guild.fetchAuditLogs({type: "ROLE_UPDATE", limit: 1})
+//    .then((audit) => audit.entries.first());
+    
+//   console.log(`${JSON.stringify(entry, null, '\t')}\n\nРоль изменил: ${entry.executor.username}`);
+
+//   if (member.id == "442329952386547723" && member.roles.find("name", "Знакомый")) {
+
+//   member.guild.channels.find("id", "441929417900425217")
+//    .send(`У вашего пользователя: ${member.toString()} удалилась роль ${member.roles.find("name", "Знакомый")}\n
+//                                                       Роль изменил: @${entry.executor.username}`);
+
+//     } else if (member.id == "442329952386547723" && !member.roles.find("name", "Знакомый")) {member.guild.channels.find("id", "441929417900425217")
+//             .send(`Вашему пользователю была добавлена роль: ${member.guild.roles.find("name", "Знакомый")}\nРоль изменил: @${entry.executor.username}`)}
+// });
+
+//  ------------------------------------------------------------------
+
 robot.on('ready', () => {
 
   console.log("Стартуем!!!");
 
 robot.user.setStatus('dnd');
 
-robot.user.setGame('vk.com/id_megabot', 'https://twitch.tv/vk.com/vk.com/id_megabot');
+robot.user.setGame('GTA 7', 'https://twitch.tv/vk.com/megabotds');
 
 }); // ready
 
@@ -40,11 +60,11 @@ catch (error) { console.log(error); }
 
 }); // guildMemberAdd
 
-robot.on('guildMemberRemove', member => { try {
+robot.on('guildMemberRemove', async member => { try {
 
   var defaultChannelId = member.guild.systemChannelID;
 
-  member.guild.channels.get(defaultChannelId).send(`Внимание! Пачимута ${member.user.tag} пакинул этот сервер. Счастливого пути!`); }
+  member.guild.channels.get(defaultChannelId).send(`Попрощайтесь с ${member.user.tag}. Он покинул этот сервер.`); }
 
   catch (error) { console.log(error); }
 
@@ -400,7 +420,7 @@ let embed = new Discord.RichEmbed().setAuthor("Вот тебе маи коман
 .addField("!скажи text", "Повторит за вами текст")
 .addField("!сервер", "Покажет информацию о данном сервере")
 //.addField("!музыка", "Все команды для воспроизведения музыки")
-.addField("Контакты разработчика: ", "[Группа ВКонтакте]: (https://vk.com/megabotds)")
+.addField("Контакты разработчика: ", "[Группа ВКонтакте]: (https://vk.com/megabot_club)")
 .setThumbnail("https://cdn.discordapp.com/avatars/441934736957636619/fce94b2b931af895d1fe09ea13997037.png?size=512")
 .setColor("#ffff00");
 
@@ -672,6 +692,31 @@ function Time() { //Powered by Yaroslav Andreev - Время + Дата
   Time();
   
   }
+
+  // Получить список аккаунтов которые имеют роль N и снять роль с них
+
+  if (sms.toLowerCase().startsWith(`${prefix}rrole`)) {
+
+    var mlist = msg.guild.roles.get("509391186986008576").members.map(m=>m.user.id).join(' | ');
+
+    var splitMlist = mlist.split(" | ");
+    var countMlist = splitMlist.length;
+   
+    for (let i = 0; i < countMlist; i++) {
+      msg.guild.members.find('id', splitMlist[i]).removeRole(msg.guild.roles.get("509391186986008576"), "Обзвон окончен.");
+    }
+
+    const test = await msg.channel.send("Loading..");
+
+ let testList = new Discord.RichEmbed().setAuthor("Result: ")
+ .setDescription(":video_game: Список игр:")
+ .addField("Следующие пользователи имеют роль: ", mlist)
+ .addField("-", "Роль снята.")
+ .setColor("#0000fa");
+
+ test.edit(testList);
+
+}
 
 
 /////////////////////////////////////////////////////////////////
