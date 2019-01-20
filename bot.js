@@ -46,7 +46,7 @@ robot.on('ready', () => {
 
 robot.user.setStatus('dnd');
 
-robot.user.setGame('GTA 7', 'https://twitch.tv/vk.com/megabotds');
+robot.user.setGame('vk.com/id_megabot', 'https://twitch.tv/vk.com/id_megabot');
 
 }); // ready
 
@@ -561,12 +561,11 @@ function FindAllRols() {
   }
 
     
-// !ttest
-
-if (sms.toLowerCase().startsWith(`${prefix}ttest`)) {
+// !test
+if (sms.toLowerCase().startsWith(`${prefix}test`)) {
   //str2 = sms.replace("!скажи", "");
 
- // msg.channel.send(msg.guild.roles.findAll("calculatedPosition", i));
+ msg.channel.send("Все работать, господин!");
 }
 
 // !когда
